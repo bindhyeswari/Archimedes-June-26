@@ -2,17 +2,43 @@
 <html ng-app="myApp">
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>Github Search API</title>
+    <link rel="stylesheet" href="base.css"/>
     <script src="bower_components/angular/angular.js"></script>
     <script>
-        angular.module('myApp', []).controller('MyController', function ($scope) {
+        angular.module('myApp', []).controller('MyController', function ($http, $scope) {
             $scope.message = 'Hello';
+            $scope.query = '';
+
+            /*$http.get('https://api.github.com/search/repositories?q=nodejs').success(function (data) {
+                console.log(data);
+                $scope.repositories = data.items;
+            });*/
+
+            $scope.search = function (event) {
+                if (event.keyCode === 13) {
+                    $http.get('https://api.github.com/search/repositories?', {
+                        params: {
+                            q: $scope.query
+                        }
+                    }).success(function (data) {
+                        console.log(data);
+                        $scope.repositories = data.items;
+                    });
+                }
+            }
+
         });
     </script>
 </head>
 <body>
 <div ng-controller="MyController">
-    {{message}}
+
+    <input type="text" ng-model="query" placeholder="search repositories" ng-keydown="search($event)"/>
+    <ul>
+        <li ng-repeat="repo in repositories">{{repo.name}}</li>
+    </ul>
+
 </div>
 </body>
 </html>
