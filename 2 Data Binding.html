@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title></title>
     <script src="bower_components/angular/angular.js"></script>
+    <link rel="stylesheet" href="base.css"/>
     <script>
 
         var app = angular.module('myApp', ['ng']);
@@ -20,27 +21,20 @@
 </head>
 <body>
 
-    <div>{{ 1 + 2 }}</div>
-    <ul>
-        <li>Loops</li>
-        <li>Conditionals</li>
-        <li>Function Declarations</li>
-    </ul>
+<div>{{ 1 + 2 }}</div>
+<ul>
+    <li>Loops</li>
+    <li>Conditionals</li>
+    <li>Function Declarations</li>
+</ul>
 
-    <div ng-controller="HelloWorldController">
+<div><input type="text" ng-model="name"/></div>
+<div><input type="text" ng-model="name"/></div>
+<div><input type="text" ng-model="name"/></div>
 
-        <div>
-            {{message}}
-        </div>
-        <div ng-bind="message">
+<div>{{name}}</div>
 
-        </div>
 
-        <input type="text" ng-model="message"/>
-
-        <button ng-click="changeMessage()">Change Message</button>
-
-    </div>
 
 
 

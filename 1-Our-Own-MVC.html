@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+
+        var $scope = {
+            user: {
+                name: 'Charles Park'
+            }
+        };
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // watchers on one way bound data
+            (function () {
+                // look for all ng-bind
+                // what is the property on the model that the ng-bind is referring to
+                // watcher on the model, so that
+                // when the model changes, so does the view
+
+                var elements_to_be_bound = Array.prototype.slice.call(document.querySelectorAll('[ng-bind]'));
+                console.log(elements_to_be_bound);
+                elements_to_be_bound.forEach(function (element) {
+                    var attr_val = element.getAttribute('ng-bind');
+
+                    var prop_expression = attr_val.split('.');
+                    console.log(prop_expression);
+
+                    var property = prop_expression.pop(); // ['user.address']
+
+                    var object = prop_expression.reduce(function (obj, property_name) {
+                        return $scope[property_name]; // $scope = obj; property_name = 'user'
+                    }, $scope);
+
+                    Object.observe(object, function (changes) {
+                        if (changes[0].name === property) {
+                            console.log('property ', property, ' has changed.');
+                            element.innerHTML = object[property];
+                        }
+                    });
+
+
+
+                });
+
+            }());
+
+            // two way data binding
+            (function () {
+                // look for all ng-bind
+                // what is the property on the model that the ng-bind is referring to
+                // watcher on the model, so that
+                // when the model changes, so does the view
+
+                var elements_to_be_bound = Array.prototype.slice.call(document.querySelectorAll('[ng-model]'));
+                console.log(elements_to_be_bound);
+                elements_to_be_bound.forEach(function (element) {
+                    var attr_val = element.getAttribute('ng-model');
+
+                    var prop_expression = attr_val.split('.');
+                    console.log(prop_expression);
+
+                    var property = prop_expression.pop(); // ['user.address']
+
+                    var object = prop_expression.reduce(function (obj, property_name) {
+                        return $scope[property_name]; // $scope = obj; property_name = 'user'
+                    }, $scope);
+
+                    Object.observe(object, function (changes) {
+                        if (changes[0].name === property) {
+                            console.log('property ', property, ' has changed.');
+                            if (element.value !== object[property]) {
+                                element.value = object[property];
+                            }
+                        }
+                    });
+
+                    element.addEventListener('keyup', function () {
+                        object[property] = this.value;
+                    });
+
+                });
+
+            }());
+        });
+
+
+
+    </script>
+</head>
+<body>
+    <div ng-bind="user.name"> This is where the model will be mapped </div>
+    <button>Change Name</button>
+
+    <input type="text" ng-model="user.name"/>
+    <input type="text" ng-model="user.name"/>
+    <input type="text" ng-model="user.name"/>
+</body>
+</html>
