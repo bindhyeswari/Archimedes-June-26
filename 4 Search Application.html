@@ -5,6 +5,13 @@
     <title>Github Search API</title>
     <link rel="stylesheet" href="base.css"/>
     <script src="bower_components/angular/angular.js"></script>
+    <style>
+        th:hover {
+            cursor: pointer;
+            background-color: #eee;
+            transition: background-color 500ms ease;
+        }
+    </style>
     <script>
         angular.module('myApp', []).controller('MyController', function ($http, $scope) {
             $scope.message = 'Hello';
@@ -26,6 +33,22 @@
                         $scope.repositories = data.items;
                     });
                 }
+            };
+
+            $scope.criterion = 'name';
+
+
+            $scope.sort = function (num) {
+                switch (num) {
+                    case 1:  $scope.criterion = 'name';
+                        break;
+                    case 2:  $scope.criterion = 'size';
+                        break;
+                    case 3:  $scope.criterion = 'language';
+                        break;
+                    case 4:  $scope.criterion = 'pushed_at';
+                        break;
+                }
             }
 
         });
@@ -35,9 +58,25 @@
 <div ng-controller="MyController">
 
     <input type="text" ng-model="query" placeholder="search repositories" ng-keydown="search($event)"/>
-    <ul>
-        <li ng-repeat="repo in repositories">{{repo.name}}</li>
-    </ul>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th ng-click="sort(1)">Name</th>
+                <th ng-click="sort(2)">Size</th>
+                <th ng-click="sort(3)">Language</th>
+                <th ng-click="sort(4)">Last Commit Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="repo in repositories | orderBy : criterion">
+                <td>{{repo.name}}</td>
+                <td>{{repo.size}}</td>
+                <td>{{repo.language}}</td>
+                <td>{{repo.pushed_at | date : 'yyyy'}}</td>
+            </tr>
+        </tbody>
+    </table>
 
 </div>
 </body>
